@@ -23,3 +23,13 @@
    
    heroku addons:add redistogo:nano
    heroku addons:add blitz:250
+   
+   
+# config
+
+base_domain = heroku info|grep Web|awk {'print $3'}
+
+heroku config:add GIHUB_OAUTH_CLIENT_ID:b6ce639ebd5618ca4d52
+heroku config:add GIHUB_OAUTH_CLIENT_SECRET:ef8b9abe468c2021d1e829f566091446375ea181
+
+heroku config:add FACEBOOK
