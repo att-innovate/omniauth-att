@@ -12,6 +12,7 @@ GEM
     json (1.6.3)
     multi_json (1.0.4)
     multipart-post (1.1.4)
+    newrelic_rpm (3.3.0)
     oauth (0.4.5)
     oauth2 (0.5.1)
       faraday (~> 0.7.4)
@@ -52,6 +53,7 @@ PLATFORMS
 
 DEPENDENCIES
   json
+  newrelic_rpm
   omniauth
   omniauth-facebook
   omniauth-github
