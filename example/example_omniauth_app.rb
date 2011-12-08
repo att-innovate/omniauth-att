@@ -52,6 +52,11 @@ class SinatraApp < Sinatra::Base
     redirect '/'
   end
   
+  get '/env' do
+    puts ENV.inspect
+    halt 401
+  end
+  
   def base_domain
     # ENV['BASE_DOMAIN'] || 'http://localhost:4567'
     "https://omniauth-att-example.herokuapp.com/"
