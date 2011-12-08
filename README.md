@@ -15,12 +15,13 @@
    heroku addons:add releases
    heroku addons:upgrade releases:advanced
    heroku addons:add ssl:piggyback
-   heroku addons:add newrelic
    heroku addons:upgrade logging:expanded
    heroku addons:add loggly:mole
    heroku addons:add memcache:5mb
    heroku addons:add stillalive:basic
-   
+
+   heroku config:add RACK_ENV=production
+   heroku addons:add newrelic  
    heroku addons:add redistogo:nano
    heroku addons:add blitz:250
    

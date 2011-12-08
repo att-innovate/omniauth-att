@@ -12,7 +12,7 @@ module OmniAuth
         args [:consumer_key, :consumer_secret]
         option :consumer_key, nil
         option :consumer_secret, nil
-        option :redirect_uri
+        option :redirect_uri, '/auth/att/callback'
 
         attr_reader :access_token
 
