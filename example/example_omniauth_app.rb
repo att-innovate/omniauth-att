@@ -52,7 +52,7 @@ class SinatraApp < Sinatra::Base
     redirect '/'
   end
   
-  def self.base_domain
+  def base_domain
     ENV['BASE_DOMAIN'] || 'http://localhost:4567'
   end
 
