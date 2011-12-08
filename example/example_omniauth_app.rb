@@ -53,7 +53,8 @@ class SinatraApp < Sinatra::Base
   end
   
   def base_domain
-    ENV['BASE_DOMAIN'] || 'http://localhost:4567'
+    # ENV['BASE_DOMAIN'] || 'http://localhost:4567'
+    "https://omniauth-att-example.herokuapp.com/"
   end
 
 end
