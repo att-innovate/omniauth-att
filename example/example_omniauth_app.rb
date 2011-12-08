@@ -7,6 +7,7 @@ require 'omniauth-github'
 require 'omniauth-facebook'
 require 'omniauth-twitter'
 #TODO require 'omniauth-att'
+BASE_DOMAIN = ENV['BASE_DOMAIN'] || 'http://localhost:4567'
 
 class SinatraApp < Sinatra::Base
   configure do
@@ -14,18 +15,18 @@ class SinatraApp < Sinatra::Base
     set :inline_templates, true
   end
   use OmniAuth::Builder do
-    provider :github, (ENV['OAUTH_CLIENT_ID']||'ece9da5a3cff23b3475f'), (ENV['OAUTH_CLIENT_SECRET']||'eb81c6098ba5d08e3c2dbd263bf11de5f3382d55')
-    provider :facebook, '290594154312564','a26bcf9d7e254db82566f31c9d72c94e'
+    provider :github, (ENV['GITHUB_CLIENT_ID']||'ece9da5a3cff23b3475f'), (ENV['GITHUB_CLIENT_SECRET']||'eb81c6098ba5d08e3c2dbd263bf11de5f3382d55')
+    provider :facebook, (ENV['FACEBOOK_CLIENT_ID']||'290594154312564'),(ENV['FACEBOOK_CLIENT_SECRET']||'a26bcf9d7e254db82566f31c9d72c94e')
     provider :twitter, 'cO23zABqRXQpkmAXa8MRw', 'TwtroETQ6sEDWW8HEgt0CUWxTavwFcMgAwqHdb0k1M'
     #TODO provider :att, '', ''
   end
   
   get '/' do
     erb "
-    <a href='http://localhost:4567/auth/github'>Login with Github</a><br>
-    <a href='http://localhost:4567/auth/facebook'>Login with facebook</a><br>
-    <a href='http://localhost:4567/auth/twitter'>Login with twitter</a><br>
-    <a href='http://localhost:4567/auth/att-foundry'>Login with att-foundry</a>"
+    <a href='#{BASE_DOMAIN}/auth/github'>Login with Github</a><br>
+    <a href='#{BASE_DOMAIN}/auth/facebook'>Login with facebook</a><br>
+    <a href='#{BASE_DOMAIN}/auth/twitter'>Login with twitter</a><br>
+    <a href='#{BASE_DOMAIN}/auth/att-foundry'>Login with att-foundry</a>"
   end
   
   get '/auth/:provider/callback' do
