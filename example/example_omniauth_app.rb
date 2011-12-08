@@ -12,8 +12,7 @@ class SinatraApp < Sinatra::Base
   configure do
     set :sessions, true
     set :inline_templates, true
-    @@@@base_domain = ENV['@@base_domain'] || 'http://localhost:4567'
-    
+    @@base_domain = ENV['@@base_domain'] || 'http://localhost:4567'
   end
   use OmniAuth::Builder do
     provider :github, (ENV['GITHUB_CLIENT_ID']||'ece9da5a3cff23b3475f'), (ENV['GITHUB_CLIENT_SECRET']||'eb81c6098ba5d08e3c2dbd263bf11de5f3382d55')
