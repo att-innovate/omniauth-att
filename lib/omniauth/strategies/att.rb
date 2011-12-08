@@ -17,7 +17,7 @@ module OmniAuth
         attr_reader :access_token
 
         def request_phase
-          redirect redirect_uri
+          redirect '/auth/att/callback' #redirect_uri
         end
 
         def callback_phase
