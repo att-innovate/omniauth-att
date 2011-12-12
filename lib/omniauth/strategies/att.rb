@@ -27,9 +27,7 @@ module OmniAuth
         :port => 80
       }
       
-      uid do
-        raw_info['uid']
-      end
+      uid { raw_info['uid'] }
       
       info do
         prune!({
@@ -45,7 +43,7 @@ module OmniAuth
         # options.consumer_key, options.consumer_secret, options.client_options
         opts = {
           :client_id => options.consumer_key,
-          :redirect_uri => 'http://localhost:9393/auth/att/callback'
+          :redirect_uri => request.url + '/callback'
         }
         redirect build_url('/auth/att', opts)
       end
