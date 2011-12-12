@@ -33,14 +33,9 @@ module OmniAuth
       
       info do
         prune!({
-          'uid' => raw_info['uid'],
           'email' => raw_info['info']['email'],
           'name' => raw_info['info']['name']
         })
-      end
-
-      extra do
-        prune!({'raw_info' => raw_info})
       end
       
       def request_phase
@@ -49,13 +44,13 @@ module OmniAuth
         
         # options.consumer_key, options.consumer_secret, options.client_options
         opts = {
+          :client_id => options.consumer_key,
           :redirect_uri => 'http://localhost:9393/auth/att/callback'
         }
         redirect build_url('/auth/att', opts)
       end
 
       def callback_phase
-        # raise OmniAuth::NoSessionError.new("Session Expired") if session['att-auth'].nil?
         super
       end
       
