@@ -1,3 +1,19 @@
+PATH
+  remote: .
+  specs:
+    omniauth-att (0.1)
+      activesupport
+      i18n
+      json
+      newrelic_rpm
+      omniauth
+      omniauth-facebook
+      omniauth-github
+      omniauth-oauth2
+      omniauth-twitter
+      sinatra
+      thin
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -67,16 +83,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport
   heroku
-  i18n
-  json
-  newrelic_rpm
-  omniauth
-  omniauth-facebook
-  omniauth-github
-  omniauth-oauth2
-  omniauth-twitter
+  omniauth-att!
   shotgun
-  sinatra
-  thin

@@ -1,5 +1,5 @@
 module OmniAuth
-  module OAuth
+  module ATT
     VERSION = "0.1"
   end
 end
