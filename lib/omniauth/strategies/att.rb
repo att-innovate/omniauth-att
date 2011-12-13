@@ -36,10 +36,7 @@ module OmniAuth
         })
       end
       
-      def request_phase
-        session['att-auth'] ||= {}
-        session['att-auth'][name.to_s] = {}
-        
+      def request_phase        
         # options.consumer_key, options.consumer_secret, options.client_options
         opts = {
           :client_id => options.consumer_key,
@@ -49,7 +46,11 @@ module OmniAuth
       end
 
       def callback_phase
-        super
+        if raw_info
+          super
+        else
+          [500, {"Content-Type" => "text/html"}, ["Problem authenticating"]]
+        end
       end
       
       private
