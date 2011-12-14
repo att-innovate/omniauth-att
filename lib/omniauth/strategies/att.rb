@@ -36,6 +36,16 @@ module OmniAuth
         })
       end
       
+      credentials do
+        prune!({
+          "token" => raw_info['uid']
+        })
+      end
+      
+      extra do
+        prune!(raw_info)
+      end
+      
       def request_phase        
         # options.consumer_key, options.consumer_secret, options.client_options
         opts = {
