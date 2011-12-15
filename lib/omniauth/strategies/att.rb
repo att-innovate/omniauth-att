@@ -23,7 +23,7 @@ module OmniAuth
       
       option :client_options, {
         :site => ENV['ATT_BASE_DOMAIN'] || 'https://auth.tfoundry.com',
-        :request_token_path => '/auth/att',
+        :request_token_path => '/login',
         :port => 80
       }
       
