@@ -48,12 +48,14 @@ class SinatraApp < Sinatra::Base
   get '/protected' do
     throw(:halt, [401, "Not authorized\n"]) unless session[:authenticated]
     erb "<pre>#{request.env['omniauth.auth'].to_json}</pre><hr>
+        <br />
          <a href='/logout'>Logout</a>"
   end
   
   get '/logout' do
     session[:authenticated] = false
-    redirect '/'
+    redirect_to = ENV['BASE_DOMAIN'] || 'http://localhost:9393'
+    redirect (ENV['ATT_BASE_DOMAIN'] || 'https://auth.tfoundry.com') + "/logout?redirect_uri=#{CGI.escape(redirect_to)}"
   end
   
   get '/env' do
@@ -85,6 +87,7 @@ __END__
     <div class='container'>
       <div class='content'>
         <%= yield %>
+        <a href="/logout">logout</a>
       </div>
       
     </div>
