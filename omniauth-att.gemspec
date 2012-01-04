@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
   %w(sinatra thin omniauth-github omniauth-facebook omniauth-twitter).each do |gem|
     s.add_runtime_dependency gem
   end
+  
   %w(shotgun heroku).each do |gem|
     s.add_development_dependency gem
   end
