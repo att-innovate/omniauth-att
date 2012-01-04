@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    omniauth-att (0.1)
+    omniauth-att (0.2)
       activesupport
       i18n
       omniauth (~> 1.0)
