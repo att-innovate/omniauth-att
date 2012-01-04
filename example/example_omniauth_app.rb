@@ -16,6 +16,14 @@ class SinatraApp < Sinatra::Base
   configure :production do
     require 'newrelic_rpm'
   end
+
+  def self.db
+    @db ||= {}
+  end
+
+  def db
+    self.class.db
+  end
   
   use OmniAuth::Builder do
     provider :github, (ENV['GITHUB_CLIENT_ID']||'b6ce639ebd5618ca4d52'), (ENV['GITHUB_CLIENT_SECRET']||'ef8b9abe468c2021d1e829f566091446375ea181')
@@ -25,14 +33,11 @@ class SinatraApp < Sinatra::Base
   end
   
   get '/' do
-    erb "
-    <a href='#{base_domain}/auth/github'>Login with Github</a><br>
-    <a href='#{base_domain}/auth/facebook'>Login with facebook</a><br>
-    <a href='#{base_domain}/auth/twitter'>Login with twitter</a><br>
-    <a href='#{base_domain}/auth/att'>Login with att-foundry</a>"
+    erb :index
   end
   
   get '/auth/:provider/callback' do
+    db[:access_token] = request.env['omniauth.auth']['credentials']['token']
     erb "<h1>#{params[:provider]}</h1>
          <pre>#{JSON.pretty_generate(request.env['omniauth.auth'])}</pre>"
   end
@@ -46,7 +51,7 @@ class SinatraApp < Sinatra::Base
   end
   
   get '/protected' do
-    throw(:halt, [401, "Not authorized\n"]) unless session[:authenticated]
+    throw(:halt, [401, "Not authorized\n"]) unless db[:access_token]
     erb "<pre>#{request.env['omniauth.auth'].to_json}</pre><hr>
         <br />
          <a href='/logout'>Logout</a>"
@@ -70,13 +75,15 @@ The foundry auth will take care of the login and redirecting the user back to th
 
 <p><code>application -> 302 #{auth_url}/login</code></p>
 <p><code>#{auth_url} 302 -> application/callback?request_token=code</code></p>
-<p><code>application -> POST #{auth_url}/auth?request_token=code -> application/callback?auth_hash</code></p>
+<p><code>application -> POST #{auth_url}/auth?code=code -> {"access_token":"token"}</code></p>
+<p><code>application -> POST #{auth_url}/auth?code=code -> {"access_token":"token"}</code></p>
     EOD
   end
   
   get '/logout' do
     session[:authenticated] = false
     redirect_to = ENV['BASE_DOMAIN'] || 'http://localhost:9393'
+    db[:access_token] = nil
     redirect auth_url + "/logout?redirect_uri=#{CGI.escape(redirect_to)}"
   end
   
@@ -126,3 +133,14 @@ __END__
   </body>
 </html>
 
+@@index
+  <% if db[:access_token] %>
+  <h4>Hurray! You already have an access token</h4>
+  <%= db[:access_token] %>
+  Get your profile <a href='/protected'>here</a>
+  <% else %>
+  <a href='<%= base_domain %>/auth/github'>Login with Github</a><br>
+  <a href='<%= base_domain %>/auth/facebook'>Login with facebook</a><br>
+  <a href='<%= base_domain %>/auth/twitter'>Login with twitter</a><br>
+  <a href='<%= base_domain %>/auth/att'>Login with att-foundry</a>
+  <% end %>

@@ -19,10 +19,12 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   # specify any dependencies here; for example:
-  %w(thin sinatra json omniauth omniauth-oauth2 activesupport i18n newrelic_rpm).each do |gem|
-    s.add_runtime_dependency gem
-  end
-  %w(omniauth-github omniauth-facebook omniauth-twitter).each do |gem|
+  s.add_dependency 'omniauth', '~> 1.0'
+  s.add_dependency 'omniauth-oauth2', '~> 1.0'
+  s.add_dependency 'activesupport'
+  s.add_dependency 'i18n'
+
+  %w(sinatra thin omniauth-github omniauth-facebook omniauth-twitter).each do |gem|
     s.add_runtime_dependency gem
   end
   %w(shotgun heroku).each do |gem|
