@@ -18,11 +18,7 @@ module OmniAuth
         :token_url => '/oauth/access_token'
       }
 
-      # These are called after authentication has succeeded. If
-      # possible, you should try to set the UID without making
-      # additional calls (if the user id is returned with the token
-      # or as a URI parameter). This may not be possible with all
-      # providers.
+      # These are called after authentication has succeeded. 
       uid{ raw_info['uid'] }
 
       info do

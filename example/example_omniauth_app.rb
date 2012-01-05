@@ -10,6 +10,7 @@ require 'omniauth-att'
 
 class SinatraApp < Sinatra::Base
   configure do
+    set :logging, true
     set :sessions, true
     set :inline_templates, true
   end
@@ -29,14 +30,21 @@ class SinatraApp < Sinatra::Base
     provider :github, (ENV['GITHUB_CLIENT_ID']||'b6ce639ebd5618ca4d52'), (ENV['GITHUB_CLIENT_SECRET']||'ef8b9abe468c2021d1e829f566091446375ea181')
     provider :facebook, (ENV['FACEBOOK_CLIENT_ID']||'290594154312564'),(ENV['FACEBOOK_CLIENT_SECRET']||'a26bcf9d7e254db82566f31c9d72c94e')
     provider :twitter, 'cO23zABqRXQpkmAXa8MRw', 'TwtroETQ6sEDWW8HEgt0CUWxTavwFcMgAwqHdb0k1M'
-    provider :att, 'client_id', 'client_secret', :callback_url => ENV['BASE_DOMAIN'] || 'http://localhost:9393'
+    provider :att, 'client_id', 'client_secret', :callback_url => "#(ENV['BASE_DOMAIN'] || 'http://localhost:9393')"
   end
   
   get '/' do
-    erb :index
+    url = request.env['REQUEST_URI']
+    url = url[0..-2] if url[-1] == '/'
+    erb "
+    <a href='#{url}/auth/github'>Login with Github</a><br>
+    <a href='#{url}/auth/facebook'>Login with facebook</a><br>
+    <a href='#{url}/auth/twitter'>Login with twitter</a><br>
+    <a href='#{url}/auth/att'>Login with att-foundry</a>"
   end
-  
-  get '/auth/:provider/callback' do
+
+
+get '/auth/:provider/callback' do
     db[:access_token] = request.env['omniauth.auth']['credentials']['token']
     erb "<h1>#{params[:provider]}</h1>
          <pre>#{JSON.pretty_generate(request.env['omniauth.auth'])}</pre>"
@@ -58,33 +66,13 @@ class SinatraApp < Sinatra::Base
   end
   
   get '/doc' do
-    erb <<-EOD
-<h2>Authentication docs page</h2>
-<p>This is a sample application that shows how the authentication mechanism works.</p>
-<p>It is incredibly simple and mimicks the OAuth2 flow. Firstly, the application must have
-a <code>client_id</code> and a <code>client_secret</code>. When the application wants to get 
-an authenticated user, they can simply redirect the user with their <code>client_id</code> and a <code>redirect_uri</code> to
-the foundry auth page at: #{auth_url}/login.
-The foundry auth will take care of the login and redirecting the user back to the <code>redirect_uri</code> (provided it matches the one that the application registered) with a <code>request_token</code>. </p>
-
-<p>It is then up to the application to respond with the <code>request_token</code> to <code>POST</code> to <code>#{auth_url}/auth</code> with the <code>request_token</code>, their <code>client_id</code> and their <code>client_secret</code>, they will get an <code>auth_hash</code> with the user's credentials, uid, some profile information and more. The entire contents of the <code>auth_hash</code> are still up for debate, but will definitely contain the user's info.</p>
-
-<p>When using the ruby language, they can use the Foundry's (soon-to-be) open-sourced <code>omniauth-att</code> library.</p>
-
-<h2>Summary</h2>
-
-<p><code>application -> 302 #{auth_url}/login</code></p>
-<p><code>#{auth_url} 302 -> application/callback?request_token=code</code></p>
-<p><code>application -> POST #{auth_url}/auth?code=code -> {"access_token":"token"}</code></p>
-<p><code>application -> POST #{auth_url}/auth?code=code -> {"access_token":"token"}</code></p>
-    EOD
+    erb :docs
   end
   
   get '/logout' do
     session[:authenticated] = false
-    redirect_to = ENV['BASE_DOMAIN'] || 'http://localhost:9393'
     db[:access_token] = nil
-    redirect auth_url + "/logout?redirect_uri=#{CGI.escape(redirect_to)}"
+    redirect auth_url + "/logout?redirect_uri=#{CGI.escape(base_domain)}"
   end
   
   get '/env' do
@@ -96,13 +84,16 @@ The foundry auth will take care of the login and redirecting the user back to th
     (ENV['ATT_BASE_DOMAIN'] || 'https://auth.tfoundry.com')
   end
   
+
   def base_domain
-    case ENV['RACK_ENV']
-    when 'production'
-      "https://omniauth-att-example.herokuapp.com"
-    else
-      ENV['BASE_DOMAIN'] || 'http://localhost:9393'
-    end
+    return  'http://localhost:5000'
+    # return ENV['BASE_DOMAIN'] if ENV['BASE_DOMAIN']
+    # case ENV['RACK_ENV']
+    # when 'production'
+    #   "https://omniauth-att-example.herokuapp.com"
+    # else
+    #   'http://localhost:9393'
+    # end
   end
 
 end
@@ -134,7 +125,7 @@ __END__
 </html>
 
 @@index
-  <% if db[:access_token] %>
+<% if db[:access_token] %>
   <h4>Hurray! You already have an access token</h4>
   <%= db[:access_token] %>
   Get your profile <a href='/protected'>here</a>
@@ -144,3 +135,25 @@ __END__
   <a href='<%= base_domain %>/auth/twitter'>Login with twitter</a><br>
   <a href='<%= base_domain %>/auth/att'>Login with att-foundry</a>
   <% end %>
+
+end  
+
+@@docs
+<h2>Authentication docs page</h2>
+<p>This is a sample application that shows how the authentication mechanism works.</p>
+<p>It is incredibly simple and mimicks the OAuth2 flow. Firstly, the application must have
+a <code>client_id</code> and a <code>client_secret</code>. When the application wants to get 
+an authenticated user, they can simply redirect the user with their <code>client_id</code> and a <code>redirect_uri</code> to
+the foundry auth page at: #{auth_url}/login.
+The foundry auth will take care of the login and redirecting the user back to the <code>redirect_uri</code> (provided it matches the one that the application registered) with a <code>request_token</code>. </p>
+
+<p>It is then up to the application to respond with the <code>request_token</code> to <code>POST</code> to <code>#{auth_url}/auth</code> with the <code>request_token</code>, their <code>client_id</code> and their <code>client_secret</code>, they will get an <code>auth_hash</code> with the user's credentials, uid, some profile information and more. The entire contents of the <code>auth_hash</code> are still up for debate, but will definitely contain the user's info.</p>
+
+<p>When using the ruby language, they can use the Foundry's (soon-to-be) open-sourced <code>omniauth-att</code> library.</p>
+
+<h2>Summary</h2>
+
+<p><code>application -> 302 #{auth_url}/login</code></p>
+<p><code>#{auth_url} 302 -> application/callback?request_token=code</code></p>
+<p><code>application -> POST #{auth_url}/auth?code=code -> {"access_token":"token"}</code></p>
+<p><code>application -> POST #{auth_url}/auth?code=code -> {"access_token":"token"}</code></p>

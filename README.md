@@ -22,9 +22,7 @@
 
    heroku config:add RACK_ENV=production
    heroku addons:add newrelic  
-   heroku addons:add redistogo:nano
-   heroku addons:add blitz:250
-   
+   heroku addons:add redistogo:nano   
    
 # config
 
