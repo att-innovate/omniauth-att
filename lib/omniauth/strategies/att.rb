@@ -44,6 +44,7 @@ module OmniAuth
 
       def request_phase
         options[:scope] = 'profile'
+        options[:authorize_params][:response_type] = 'client_credentials'
         super
       end
 
