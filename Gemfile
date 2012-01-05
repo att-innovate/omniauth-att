@@ -14,8 +14,3 @@ group :example do
   gem 'omniauth-facebook'
   gem 'omniauth-twitter'
 end
-group :development do
-  gem 'shotgun'
-  gem 'heroku'
-end
-
