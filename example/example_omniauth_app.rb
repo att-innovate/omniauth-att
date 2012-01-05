@@ -30,7 +30,7 @@ class SinatraApp < Sinatra::Base
     provider :github, (ENV['GITHUB_CLIENT_ID']||'b6ce639ebd5618ca4d52'), (ENV['GITHUB_CLIENT_SECRET']||'ef8b9abe468c2021d1e829f566091446375ea181')
     provider :facebook, (ENV['FACEBOOK_CLIENT_ID']||'290594154312564'),(ENV['FACEBOOK_CLIENT_SECRET']||'a26bcf9d7e254db82566f31c9d72c94e')
     provider :twitter, 'cO23zABqRXQpkmAXa8MRw', 'TwtroETQ6sEDWW8HEgt0CUWxTavwFcMgAwqHdb0k1M'
-    provider :att, 'client_id', 'client_secret', :callback_url => "#(ENV['BASE_DOMAIN'] || 'http://localhost:9393')"
+    provider :att, 'client_id', 'client_secret' #, :site=>'https://auth.tfoundry.com' #, :callback_url => "#(ENV['BASE_DOMAIN'] || 'http://localhost:9393')"
   end
   
   get '/' do

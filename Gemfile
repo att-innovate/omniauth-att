@@ -1,5 +1,6 @@
 source :rubygems
 gem 'rack', '1.3.6'
+gem 'tilt'
 gem 'thin'
 gem 'sinatra'
 gem 'json'
