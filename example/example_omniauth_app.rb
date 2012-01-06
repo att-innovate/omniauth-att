@@ -34,18 +34,13 @@ class SinatraApp < Sinatra::Base
   end
   
   get '/' do
-    url = request.env['REQUEST_URI']
-    url = url[0..-2] if url[-1] == '/'
-    erb "
-    <a href='#{url}/auth/github'>Login with Github</a><br>
-    <a href='#{url}/auth/facebook'>Login with facebook</a><br>
-    <a href='#{url}/auth/twitter'>Login with twitter</a><br>
-    <a href='#{url}/auth/att'>Login with att-foundry</a>"
+    erb :index
   end
 
 
 get '/auth/:provider/callback' do
     db[:access_token] = request.env['omniauth.auth']['credentials']['token']
+    @access_token = db[:access_token]
     erb "<h1>#{params[:provider]}</h1>
          <pre>#{JSON.pretty_generate(request.env['omniauth.auth'])}</pre>"
   end
@@ -86,7 +81,7 @@ get '/auth/:provider/callback' do
   
 
   def base_domain
-    return  'http://localhost:5000'
+    return  'http://localhost:9393'
     # return ENV['BASE_DOMAIN'] if ENV['BASE_DOMAIN']
     # case ENV['RACK_ENV']
     # when 'production'
@@ -125,18 +120,19 @@ __END__
 </html>
 
 @@index
-<% if db[:access_token] %>
+  <% if @access_token %>
   <h4>Hurray! You already have an access token</h4>
-  <%= db[:access_token] %>
+  <%= @access_token %>
   Get your profile <a href='/protected'>here</a>
   <% else %>
-  <a href='<%= base_domain %>/auth/github'>Login with Github</a><br>
-  <a href='<%= base_domain %>/auth/facebook'>Login with facebook</a><br>
-  <a href='<%= base_domain %>/auth/twitter'>Login with twitter</a><br>
-  <a href='<%= base_domain %>/auth/att'>Login with att-foundry</a>
+  <% url = request.env['REQUEST_URI'] %>
+  <% url = url[0..-2] if url[-1] == '/' %>
+  
+  <a href='<%= url %>/auth/github'>Login with Github</a><br>
+  <a href='<%= url %>/auth/facebook'>Login with facebook</a><br>
+  <a href='<%= url %>/auth/twitter'>Login with twitter</a><br>
+  <a href='<%= url %>/auth/att'>Login with att-foundry</a>
   <% end %>
-
-end  
 
 @@docs
 <h2>Authentication docs page</h2>

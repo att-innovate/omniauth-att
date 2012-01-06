@@ -14,8 +14,8 @@ module OmniAuth
 
       option :client_options, {
         :site => ENV['ATT_BASE_DOMAIN'] || 'https://auth.tfoundry.com',
-        :authorize_url => '/oauth/authenticate',
-        :token_url => '/oauth/access_token'
+        :authorize_url => '/oauth/authorize',
+        :token_url => '/oauth/token'
       }
 
       # These are called after authentication has succeeded. 
