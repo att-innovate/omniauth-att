@@ -12,6 +12,10 @@ module OmniAuth
     class Att < OmniAuth::Strategies::OAuth2
       option :name, "att"
 
+      option :authorize_params, {
+        :response_type => 'client_credentials'
+      }
+      option :scope, 'profile'
       option :client_options, {
         :site => ENV['ATT_BASE_DOMAIN'] || 'https://auth.tfoundry.com',
         :authorize_url => '/oauth/authorize',
