@@ -22,7 +22,7 @@ module OmniAuth
         :token_url => '/oauth/token'
       }
 
-      # These are called after authentication has succeeded. 
+      # These are called after authentication has succeeded.
       uid{ raw_info['uid'] }
 
       info do
@@ -62,11 +62,24 @@ module OmniAuth
       end
 
       def raw_info
-        @raw_info ||= access_token.get('/me.json').parsed
+        if @raw_info
+          @raw_info
+        else
+          req = get_info_hash
+          if req.has_key? 'success' && req['success'] == 'false'
+            raise Exception.new(req['message'])
+          else
+            @raw_info = req['user']
+          end
+        end
       end
 
-      private
-      
+private
+
+      def get_info_hash
+        access_token.get('/me.json').parsed
+      end
+
       def prune!(hash)
         hash.delete_if do |_, value|
           prune!(value) if value.is_a?(Hash)
