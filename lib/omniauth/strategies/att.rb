@@ -12,17 +12,13 @@ module OmniAuth
     class Att < OmniAuth::Strategies::OAuth2
       option :name, "att"
 
-      option :authorize_params, {
-        :response_type => 'client_credentials'
-      }
-      option :scope, 'profile'
       option :client_options, {
         :site => ENV['ATT_BASE_DOMAIN'] || 'https://auth.tfoundry.com',
         :authorize_url => '/oauth/authorize',
         :token_url => '/oauth/token'
       }
 
-      # These are called after authentication has succeeded.
+      # These are called after authentication has succeeded. 
       uid{ raw_info['uid'] }
 
       info do
@@ -46,6 +42,10 @@ module OmniAuth
         hash
       end
 
+      def full_host
+        ENV['RACK_ENV'] == 'production' ? super.gsub('http:', 'https:') : super
+      end
+
       def request_phase
         options[:scope] = 'profile'
         options[:authorize_params][:response_type] = 'client_credentials'
@@ -62,24 +62,11 @@ module OmniAuth
       end
 
       def raw_info
-        if @raw_info
-          @raw_info
-        else
-          req = get_info_hash
-          if req.has_key? 'success' && req['success'] == 'false'
-            raise Exception.new(req['message'])
-          else
-            @raw_info = req['user']
-          end
-        end
+        @raw_info ||= access_token.get('/me.json').parsed
       end
 
-private
-
-      def get_info_hash
-        access_token.get('/me.json').parsed
-      end
-
+      private
+      
       def prune!(hash)
         hash.delete_if do |_, value|
           prune!(value) if value.is_a?(Hash)
