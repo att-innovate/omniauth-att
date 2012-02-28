@@ -15,7 +15,12 @@ module OmniAuth
       option :client_options, {
         :site => ENV['ATT_BASE_DOMAIN'] || 'https://auth.tfoundry.com',
         :authorize_url => '/oauth/authorize',
-        :token_url => '/oauth/token'
+        :token_url => '/oauth/token.json',
+        :raise_errors => false
+      }
+
+      option :token_params, {
+        :parse => :json
       }
 
       # These are called after authentication has succeeded. 
@@ -47,18 +52,9 @@ module OmniAuth
       end
 
       def request_phase
-        options[:scope] = 'profile'
-        options[:authorize_params][:response_type] = 'client_credentials'
+        options[:scope] ||= 'profile'
+        options[:authorize_params][:response_type] ||= 'code'
         super
-      end
-
-      def callback_phase
-        super
-      end
-
-      def build_access_token
-        a = super
-        self.access_token = ::OAuth2::AccessToken.new(client, a.token, a.params)
       end
 
       def raw_info
