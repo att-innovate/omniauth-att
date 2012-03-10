@@ -35,7 +35,7 @@ module OmniAuth
 
       extra do
         {
-          # 'raw_info' => prune!(raw_info)
+          'raw_info' => prune!(raw_info['info'])
         }
       end
 
