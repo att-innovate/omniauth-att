@@ -51,11 +51,11 @@ module OmniAuth
         ENV['RACK_ENV'] == 'production' ? super.gsub('http:', 'https:') : super
       end
 
-      def request_phase
-        options[:scope] ||= 'profile'
-        options[:authorize_params][:response_type] ||= 'code'
-        super
-      end
+      # def request_phase
+      #   options[:scope] ||= 'profile'
+      #   options[:authorize_params][:response_type] ||= 'code'
+      #   super
+      # end
 
       def raw_info
         @raw_info ||= access_token.get('/me.json').parsed
