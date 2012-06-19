@@ -13,10 +13,10 @@ module OmniAuth
       option :name, "att"
 
       option :client_options, {
-        :site => ENV['ATT_BASE_DOMAIN'] || 'https://auth.tfoundry.com',
-        :authorize_url => '/oauth/authorize',
-        :token_url => '/oauth/token.json',
-        :raise_errors => false
+        :site           => ENV['ATT_BASE_DOMAIN'] || 'https://auth.tfoundry.com',
+        :authorize_url  => '/oauth/authorize',
+        :token_url      => '/oauth/token.json',
+        :raise_errors   => true
       }
 
       option :token_params, {
@@ -28,14 +28,16 @@ module OmniAuth
 
       info do
         prune!({
-          :name => raw_info['info']['name'],
-          :email => raw_info['info']['email']
+          :name       => raw_info['info']['name'],
+          :email      => raw_info['info']['email'],
+          :first_name => raw_info['info']['first_name'],
+          :last_name  => raw_info['info']['last_name']
         })
       end
 
       extra do
         {
-          'raw_info' => prune!(raw_info['info'])
+          'raw_info' => prune!(raw_info)
         }
       end
 
@@ -51,11 +53,11 @@ module OmniAuth
         ENV['RACK_ENV'] == 'production' ? super.gsub('http:', 'https:') : super
       end
 
-      # def request_phase
-      #   options[:scope] ||= 'profile'
-      #   options[:authorize_params][:response_type] ||= 'code'
-      #   super
-      # end
+      def request_phase
+        # options[:scope] ||= 'profile'
+        options[:authorize_params][:response_type] ||= 'code'
+        super
+      end
 
       def raw_info
         @raw_info ||= access_token.get('/me.json').parsed

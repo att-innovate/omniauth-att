@@ -5,8 +5,8 @@ require "omniauth-att/version"
 Gem::Specification.new do |s|
   s.name        = "omniauth-att"
   s.version     = OmniAuth::ATT::VERSION
-  s.authors     = ["Ari Lerner"]
-  s.email       = ["arilerner@mac.com"]
+  s.authors     = ["Ari Lerner", "Michael Fairchild"]
+  s.email       = ["arilerner@mac.com", "mfairchild@tfoundry.com"]
   s.homepage    = ""
   s.summary     = %q{OmniAuth extension to use AT&T accounts}
   s.description = %q{Use this OmniAuth to connect to the AT&T Foundry identity services}
@@ -24,11 +24,11 @@ Gem::Specification.new do |s|
   s.add_dependency 'activesupport'
   s.add_dependency 'i18n'
 
-  %w(sinatra thin omniauth-github omniauth-facebook omniauth-twitter).each do |gem|
+  %w(sinatra thin omniauth omniauth-oauth2).each do |gem|
     s.add_runtime_dependency gem
   end
   
-  %w(shotgun heroku).each do |gem|
+  %w(shotgun heroku  omniauth-github omniauth-facebook omniauth-twitter).each do |gem|
     s.add_development_dependency gem
   end
   # s.add_development_dependency "rspec"
