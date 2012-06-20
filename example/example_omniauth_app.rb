@@ -153,3 +153,23 @@ The foundry auth will take care of the login and redirecting the user back to th
 <p><code>#{auth_url} 302 -> application/callback?request_token=code</code></p>
 <p><code>application -> POST #{auth_url}/auth?code=code -> {"access_token":"token"}</code></p>
 <p><code>application -> POST #{auth_url}/auth?code=code -> {"access_token":"token"}</code></p>
+
+@@readme
+## To deploy to heroku
+    
+     heroku create --stack cedar
+     git push heorku master
+     heroku config:add ATT_CLIENT_ID=asdfsdf ATT_CLIENT_SECRET=gggg  ATT_REDIRECT_URI=https://yourapp.heroku.com/auth/att/callback 
+     heroku open
+   
+# config
+
+If you would like to also have the github and facebook samples work, you will need to get app credentials and update the env.
+
+    base_domain = heroku info|grep Web|awk {'print $3'}
+
+    heroku config:add GIHUB_OAUTH_CLIENT_ID=xx
+    heroku config:add GIHUB_OAUTH_CLIENT_SECRET=cv
+
+    heroku config:add FACEBOOK_OAUTH_CLIENT_ID=fdfdf
+    heroku config:add FACEBOOK_OAUTH_CLIENT_SECRET=asdsad
