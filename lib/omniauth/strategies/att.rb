@@ -27,17 +27,8 @@ module OmniAuth
 
       info do
         prune!({
-          :name       => raw_info['info']['name'],
-          :email      => raw_info['info']['email'],
-          :first_name => raw_info['info']['first_name'],
-          :last_name  => raw_info['info']['last_name']
+          :name       => raw_info['name']
         })
-      end
-
-      extra do
-        {
-          'raw_info' => raw_info
-        }
       end
 
       credentials do
