@@ -3,7 +3,7 @@ This gem provides a wrapper around the oauth server used in the att foundry alph
 ## To run this example locally
 
     bundle install
-    ruby ./example_omniauth_app.rb
+    ruby ./example/example_omniauth_app.rb
     open http://localhost:4567
     
 This gem can be integrated with a ruby app to preovide authentication and authorization and basic profile services.
