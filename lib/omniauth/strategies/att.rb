@@ -54,7 +54,6 @@ module OmniAuth
       end
 
       def request_phase
-        # options[:scope] ||= 'profile'
         options[:authorize_params][:response_type] ||= 'code'
         super
       end
@@ -64,7 +63,7 @@ module OmniAuth
       end
 
       private
-      
+
       def prune!(hash)
         hash.delete_if do |_, value|
           prune!(value) if value.is_a?(Hash)
