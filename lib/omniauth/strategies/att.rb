@@ -5,6 +5,7 @@ require 'omniauth/strategies/oauth2'
 require 'active_support/core_ext/object'
 require 'active_support/core_ext/hash'
 require 'json'
+require 'uri'
 
 module OmniAuth
   module Strategies
@@ -14,6 +15,7 @@ module OmniAuth
       option :client_options, {
         :site           => ENV['ATT_BASE_DOMAIN'] || 'https://auth.tfoundry.com',
         :authorize_url  => '/oauth/authorize',
+        :saml_base_path => nil,
         :token_url      => '/oauth/token.json',
         :raise_errors   => true
       }
@@ -56,7 +58,11 @@ module OmniAuth
       def request_phase
         # options[:scope] ||= 'profile'
         options[:authorize_params][:response_type] ||= 'code'
-        super
+        if options.client_options[:saml_base_path]
+          redirect saml_url
+        else
+          super
+        end
       end
 
       def raw_info
@@ -64,7 +70,7 @@ module OmniAuth
       end
 
       private
-      
+
       def prune!(hash)
         hash.delete_if do |_, value|
           prune!(value) if value.is_a?(Hash)
@@ -72,6 +78,13 @@ module OmniAuth
         end
       end
 
+      def saml_url
+        auth_url = client.auth_code.authorize_url({:redirect_uri => callback_url}.merge(authorize_params))
+        URI.parse(options.client_options[:site]).tap do |url|
+          url.path = options.client_options[:saml_base_path]
+          url.query = URI.encode_www_form({:origin => auth_url})
+        end.to_s
+      end
     end
   end
 end
