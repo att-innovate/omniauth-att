@@ -7,12 +7,16 @@ require 'omniauth-github'
 require 'omniauth-facebook'
 require 'omniauth-twitter'
 require 'omniauth-att'
+require "sinatra/reloader"
 
 class SinatraApp < Sinatra::Base
   configure do
     set :logging, true
     set :sessions, true
     set :inline_templates, true
+  end
+  configure :development do
+    register Sinatra::Reloader
   end
   configure :production do
     require 'newrelic_rpm'
@@ -27,10 +31,11 @@ class SinatraApp < Sinatra::Base
   end
   
   use OmniAuth::Builder do
-    provider :github, (ENV['GITHUB_CLIENT_ID']||'b6ce639ebd5618ca4d52'), (ENV['GITHUB_CLIENT_SECRET']||'ef8b9abe468c2021d1e829f566091446375ea181')
+    provider :github, (ENV['GITHUB_CLIENT_ID']||'8a00e074d58c582241af'), (ENV['GITHUB_CLIENT_SECRET']||'1f7aa7e8b33d621efd9768448029bb8fb77d479c')
     provider :facebook, (ENV['FACEBOOK_CLIENT_ID']||'290594154312564'),(ENV['FACEBOOK_CLIENT_SECRET']||'a26bcf9d7e254db82566f31c9d72c94e')
     provider :twitter, 'cO23zABqRXQpkmAXa8MRw', 'TwtroETQ6sEDWW8HEgt0CUWxTavwFcMgAwqHdb0k1M'
-    provider :att, ENV['ATT_CLIENT_ID'], ENV['ATT_CLIENT_SECRET'], :site=>ENV['ATT_BASE_DOMAIN'], :callback_url => "#(ENV['BASE_DOMAIN'] || 'http://localhost:9393')/auth/att/callback"
+    provider :att, ENV['ATT_CLIENT_ID'], ENV['ATT_CLIENT_SECRET'], :site=>ENV['ATT_BASE_DOMAIN'], 
+    :callback_url => "#(ENV['BASE_DOMAIN'] || 'http://localhost:4567')/auth/att/callback", :scope=>'profile'
   end
   
   get '/' do
@@ -81,19 +86,20 @@ get '/auth/:provider/callback' do
   
 
   def base_domain
-    return  'http://localhost:9393'
-    # return ENV['BASE_DOMAIN'] if ENV['BASE_DOMAIN']
-    # case ENV['RACK_ENV']
-    # when 'production'
-    #   "https://omniauth-att-example.herokuapp.com"
-    # else
-    #   'http://localhost:9393'
-    # end
+    return ENV['BASE_DOMAIN'] if ENV['BASE_DOMAIN']
+    case ENV['RACK_ENV']
+    when 'production'
+      "https://omniauth-att-example.herokuapp.com"
+    else
+      'http://localhost:4567'
+    end
   end
 
 end
 
 SinatraApp.run! if __FILE__ == $0
+
+
 
 __END__
 
@@ -121,18 +127,20 @@ __END__
 
 @@index
   <% if @access_token %>
-  <h4>Hurray! You already have an access token</h4>
-  <%= @access_token %>
-  Get your profile <a href='/protected'>here</a>
+    <h4>Hurray! You already have an access token</h4>
+    <%= @access_token %>
+    Get your profile <a href='/protected'>here</a>
   <% else %>
-  <% url = request.env['REQUEST_URI'] %>
-  <% url = url[0..-2] if url[-1] == '/' %>
+    <% url = request.env['REQUEST_URI'] %>
+    <% url = url[0..-2] if url[-1] == '/' %>
   
-  <a href='<%= url %>/auth/github'>Login with Github</a><br>
-  <a href='<%= url %>/auth/facebook'>Login with facebook</a><br>
-  <a href='<%= url %>/auth/twitter'>Login with twitter</a><br>
-  <a href='<%= url %>/auth/att'>Login with att-foundry</a>
+    <a href='<%= url %>/auth/github'>Login with Github</a><br>
+    <!-- <a href='<%= url %>/auth/facebook'>Login with facebook</a><br> -->
+    <!-- <a href='<%= url %>/auth/twitter'>Login with twitter</a><br> -->
+    <a href='<%= url %>/auth/att'>Login with att-foundry</a>
   <% end %>
+  
+  <a href='https://auth.api-uat.mars.bf.sl.attcompute.com/oauth/authorize?client_id=qrteezvxmybumu6ehesc9jwcssz5yuhs&response_type=code&scope=profile&redirect_uri=http://localhost:4567/auth/att/callback'>authorize</a>
 
 @@docs
 <h2>Authentication docs page</h2>

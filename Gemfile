@@ -1,8 +1,9 @@
 source :rubygems
-gem 'rack', '1.3.6'
+gem 'rack'
 gem 'tilt'
 gem 'thin'
 gem 'sinatra'
+gem 'sinatra-contrib'
 gem 'json'
 gem 'omniauth'
 gem 'omniauth-oauth2'
