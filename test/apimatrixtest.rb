@@ -2,9 +2,11 @@ require 'net/http'
 require "uri"
 require 'rubygems'
 require 'sinatra'
-require 'sinatra/reloader'
 require 'oauth2' 
 require 'json'
+require 'restclient'
+# require 'sinatra/reloader'  if development?
+require 'pry'               if development?
 
 set :logging, true
 
@@ -26,22 +28,18 @@ def auth_url(scoped=ENV['ATT_SCOPE'])
 end
 
 get "/" do
-  erb "<a class='btn btn-large' href='<%= auth_url %>'> <%= auth_url %> </a>"
+  erb "<a href='<%= auth_url %>'> <%= auth_url %> </a>"
 end
 
 get '/auth/att/callback' do
-  puts request.inspect
-  binding.pry
-  access_token = client.auth_code.get_token(params[:code])
-  # if request.env['rack.request.query_hash'][:code]
-  #   @code = request.query_hash[:code]
-  #   uri = URI.parse("#{ENV['ATT_AUTH_SERVER']}/oauth/token")
-  
-  #   response = Net::HTTP.post_form(uri, {:client_id=>ENV['ATT_CLIENT_ID'], :client_secret=>ENV['ATT_CLIENT_SECRET'], :grant_type=>'authorization_code', :code=>@code})
-  #   erb response.body
-  # else
-  #   erb "<pre><%= response.inspect %></pre>" 
-  # end
+  # access_token = client.auth_code.get_token(params[:code])  #This is if you just woudl rather use the oauth library
+  if request.params['code']
+    form_data = {:client_id=>ENV['ATT_CLIENT_ID'], :client_secret=>ENV['ATT_CLIENT_SECRET'], :grant_type=>'authorization_code', :code=>request.params['code']}
+    response = RestClient.post "#{ENV['ATT_AUTH_SERVER']}/oauth/token", form_data
+    erb response.body
+  else
+    erb "<pre><%= request.inspect %></pre>" 
+  end
 end
 
 get '/auth/failure' do
@@ -49,6 +47,7 @@ get '/auth/failure' do
 end
 
 __END__
+
 @@ layout
 
 <!DOCTYPE html>
