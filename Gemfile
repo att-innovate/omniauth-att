@@ -3,6 +3,7 @@ gem 'rack', '1.3.6'
 gem 'tilt'
 gem 'thin'
 gem 'sinatra'
+gem 'sinatra-contrib'
 gem 'json'
 gem 'omniauth'
 gem 'omniauth-oauth2'
@@ -20,4 +21,6 @@ end
 
 group :developent do
   gem 'shotgun'
+  gem 'pry'
+  gem 'pry-stack_explorer'
 end

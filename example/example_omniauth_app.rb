@@ -8,6 +8,8 @@ require 'omniauth-facebook'
 require 'omniauth-twitter'
 require 'omniauth-att'
 
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+
 class SinatraApp < Sinatra::Base
   configure do
     set :logging, true
@@ -30,7 +32,7 @@ class SinatraApp < Sinatra::Base
     provider :github, (ENV['GITHUB_CLIENT_ID']||'b6ce639ebd5618ca4d52'), (ENV['GITHUB_CLIENT_SECRET']||'ef8b9abe468c2021d1e829f566091446375ea181')
     provider :facebook, (ENV['FACEBOOK_CLIENT_ID']||'290594154312564'),(ENV['FACEBOOK_CLIENT_SECRET']||'a26bcf9d7e254db82566f31c9d72c94e')
     provider :twitter, 'cO23zABqRXQpkmAXa8MRw', 'TwtroETQ6sEDWW8HEgt0CUWxTavwFcMgAwqHdb0k1M'
-    provider :att, ENV['ATT_CLIENT_ID'], ENV['ATT_CLIENT_SECRET'], :site=>ENV['ATT_BASE_DOMAIN'], :callback_url => "#(ENV['BASE_DOMAIN'] || 'http://localhost:9393')/auth/att/callback"
+    provider :att, ENV['ATT_CLIENT_ID'], ENV['ATT_CLIENT_SECRET'], :site=>ENV['ATT_BASE_DOMAIN'], :scope=>ENV['ATT_SCOPE']
   end
   
   get '/' do
@@ -38,7 +40,7 @@ class SinatraApp < Sinatra::Base
   end
 
 
-get '/auth/:provider/callback' do
+  get '/auth/:provider/callback' do
     db[:access_token] = request.env['omniauth.auth']['credentials']['token']
     @access_token = db[:access_token]
     erb "<h1>#{params[:provider]}</h1>
