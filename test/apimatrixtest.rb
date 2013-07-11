@@ -10,8 +10,7 @@ def client
                      (ENV['ATT_CLIENT_SECRET']||'testing'),
                      :site => ENV['ATT_AUTH_SERVER'],
                      :authorize_url => "#{ENV['ATT_AUTH_SERVER']}/oauth/authorize",
-                     :token_url => "#{ENV['ATT_AUTH_SERVER']}/oauth/token",
-                     :scopes => "#ENV['ATT_SCOPE']")
+                     :token_url => "#{ENV['ATT_AUTH_SERVER']}/oauth/token")
 end
 
 get "/" do
@@ -19,7 +18,7 @@ get "/" do
 end
 
 get '/auth' do
-  authorization_url = client.auth_code.authorize_url(:redirect_uri => redirect_uri, :response_type => "code", :scope => scopes)
+  authorization_url = client.auth_code.authorize_url(:redirect_uri => redirect_uri, :response_type => "code", :scope => 'tl")
   puts "Redirecting to URL: #{authorization_url.inspect}"
   redirect authorization_url
 end
