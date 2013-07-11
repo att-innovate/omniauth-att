@@ -7,7 +7,7 @@ require 'omniauth-github'
 require 'omniauth-facebook'
 require 'omniauth-twitter'
 require 'omniauth-att'
-require "sinatra/reloader"
+require 'sinatra/reloader'
 
 class SinatraApp < Sinatra::Base
   configure do
@@ -35,7 +35,7 @@ class SinatraApp < Sinatra::Base
     provider :facebook, (ENV['FACEBOOK_CLIENT_ID']||'290594154312564'),(ENV['FACEBOOK_CLIENT_SECRET']||'a26bcf9d7e254db82566f31c9d72c94e')
     provider :twitter, 'cO23zABqRXQpkmAXa8MRw', 'TwtroETQ6sEDWW8HEgt0CUWxTavwFcMgAwqHdb0k1M'
     provider :att, ENV['ATT_CLIENT_ID'], ENV['ATT_CLIENT_SECRET'], :site=>ENV['ATT_BASE_DOMAIN'], 
-    :callback_url => "#(ENV['BASE_DOMAIN'] || 'http://localhost:4567')/auth/att/callback", :scope=>'profile'
+    :callback_url => "#(ENV['BASE_DOMAIN'] || 'http://localhost:4567')/auth/att/callback", :scope=>'TL'
   end
   
   get '/' do
@@ -140,7 +140,7 @@ __END__
     <a href='<%= url %>/auth/att'>Login with att-foundry</a>
   <% end %>
   
-  <a href='https://auth.api-uat.mars.bf.sl.attcompute.com/oauth/authorize?client_id=qrteezvxmybumu6ehesc9jwcssz5yuhs&response_type=code&scope=profile&redirect_uri=http://localhost:4567/auth/att/callback'>authorize</a>
+  <a href='https://auth.api-uat.mars.bf.sl.attcompute.com/oauth/authorize?client_id=qrteezvxmybumu6ehesc9jwcssz5yuhs&response_type=code&scope=IMMN,TL&redirect_uri=http://localhost:4567/auth/att/callback'>authorize</a>
 
 @@docs
 <h2>Authentication docs page</h2>
