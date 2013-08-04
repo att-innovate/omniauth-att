@@ -56,7 +56,6 @@ module OmniAuth
       end
 
       def request_phase
-        # options[:scope] ||= 'profile'
         options[:authorize_params][:response_type] ||= 'code'
         if options.client_options[:saml_base_path]
           redirect saml_url
