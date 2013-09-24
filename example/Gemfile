@@ -1,0 +1,17 @@
+source 'https://rubygems.org'
+
+gem 'omniauth-att', path: '..'
+
+gem 'sinatra'
+gem 'thin'
+gem 'omniauth'
+gem 'omniauth-oauth2'
+gem 'shotgun'
+gem 'heroku'
+gem 'omniauth-github'
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
+
+gem 'rspec'
+gem 'rest-client'
+gem 'foreman'
