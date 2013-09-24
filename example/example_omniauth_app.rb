@@ -1,12 +1,4 @@
-require 'rubygems'
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__),"..","lib"))
-require 'sinatra'
 require 'json'
-require 'omniauth'
-require 'omniauth-github'
-require 'omniauth-facebook'
-require 'omniauth-twitter'
-require 'omniauth-att'
 
 class SinatraApp < Sinatra::Base
   configure do
@@ -25,7 +17,7 @@ class SinatraApp < Sinatra::Base
   def db
     self.class.db
   end
-  
+
   use OmniAuth::Builder do
     provider :github, (ENV['GITHUB_CLIENT_ID']||'b6ce639ebd5618ca4d52'), (ENV['GITHUB_CLIENT_SECRET']||'ef8b9abe468c2021d1e829f566091446375ea181')
     provider :facebook, (ENV['FACEBOOK_CLIENT_ID']||'290594154312564'),(ENV['FACEBOOK_CLIENT_SECRET']||'a26bcf9d7e254db82566f31c9d72c94e')
@@ -35,7 +27,7 @@ class SinatraApp < Sinatra::Base
              :callback_url => "#(ENV['BASE_DOMAIN'] || 'http://localhost:9393')/auth/att/callback",
              :scope => 'profile'
   end
-  
+
   get '/' do
     erb :index
   end
@@ -47,41 +39,41 @@ get '/auth/:provider/callback' do
     erb "<h1>#{params[:provider]}</h1>
          <pre>#{JSON.pretty_generate(request.env['omniauth.auth'])}</pre>"
   end
-  
+
   get '/auth/failure' do
     erb "<h1>Authentication Failed:</h1><h3>message:<h3> <pre>#{params}</pre>"
   end
-  
+
   get '/auth/:provider/deauthorized' do
     erb "#{params[:provider]} has deauthorized this app."
   end
-  
+
   get '/protected' do
     throw(:halt, [401, "Not authorized\n"]) unless db[:access_token]
     erb "<pre>#{request.env['omniauth.auth'].to_json}</pre><hr>
         <br />
          <a href='/logout'>Logout</a>"
   end
-  
+
   get '/doc' do
     erb :docs
   end
-  
+
   get '/logout' do
     session[:authenticated] = false
     db[:access_token] = nil
     redirect auth_url + "/logout?redirect_uri=#{CGI.escape(base_domain)}"
   end
-  
+
   get '/env' do
     puts ENV.inspect
     halt 401
   end
-  
+
   def auth_url
     (ENV['ATT_BASE_DOMAIN'] || 'https://auth.tfoundry.com')
   end
-  
+
 
   def base_domain
     return  'http://localhost:9393'
@@ -95,8 +87,6 @@ get '/auth/:provider/callback' do
   end
 
 end
-
-SinatraApp.run! if __FILE__ == $0
 
 __END__
 
@@ -117,7 +107,7 @@ __END__
       <div class='content'>
         <%= yield %>
       </div>
-      
+
     </div>
   </body>
 </html>
@@ -130,7 +120,7 @@ __END__
   <% else %>
   <% url = request.env['REQUEST_URI'] %>
   <% url = url[0..-2] if url[-1] == '/' %>
-  
+
   <a href='<%= url %>/auth/github'>Login with Github</a><br>
   <a href='<%= url %>/auth/facebook'>Login with facebook</a><br>
   <a href='<%= url %>/auth/twitter'>Login with twitter</a><br>
@@ -141,7 +131,7 @@ __END__
 <h2>Authentication docs page</h2>
 <p>This is a sample application that shows how the authentication mechanism works.</p>
 <p>It is incredibly simple and mimicks the OAuth2 flow. Firstly, the application must have
-a <code>client_id</code> and a <code>client_secret</code>. When the application wants to get 
+a <code>client_id</code> and a <code>client_secret</code>. When the application wants to get
 an authenticated user, they can simply redirect the user with their <code>client_id</code> and a <code>redirect_uri</code> to
 the foundry auth page at: #{auth_url}/login.
 The foundry auth will take care of the login and redirecting the user back to the <code>redirect_uri</code> (provided it matches the one that the application registered) with a <code>request_token</code>. </p>
@@ -159,12 +149,12 @@ The foundry auth will take care of the login and redirecting the user back to th
 
 @@readme
 ## To deploy to heroku
-    
+
      heroku create --stack cedar
      git push heorku master
-     heroku config:add ATT_CLIENT_ID=asdfsdf ATT_CLIENT_SECRET=gggg  ATT_REDIRECT_URI=https://yourapp.heroku.com/auth/att/callback 
+     heroku config:add ATT_CLIENT_ID=asdfsdf ATT_CLIENT_SECRET=gggg  ATT_REDIRECT_URI=https://yourapp.heroku.com/auth/att/callback
      heroku open
-   
+
 # config
 
 If you would like to also have the github and facebook samples work, you will need to get app credentials and update the env.
