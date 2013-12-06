@@ -20,6 +20,8 @@ module OmniAuth
         :raise_errors   => true
       }
 
+      option :provider_ignores_state, true
+
       option :token_params, {
         :parse => :json
       }
