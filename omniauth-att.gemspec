@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   # specify any dependencies here; for example:
-  s.add_dependency 'omniauth', '~> 1.0'
-  s.add_dependency 'omniauth-oauth2', '~> 1.0'
+  s.add_dependency 'omniauth', '1.1.1'
+  s.add_dependency 'omniauth-oauth2', '1.1.1'
   s.add_dependency 'activesupport'
   s.add_dependency 'i18n'
 

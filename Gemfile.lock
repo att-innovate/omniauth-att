@@ -1,59 +1,97 @@
+GIT
+  remote: https://github.com/arunagw/omniauth-twitter.git
+  revision: 9f2cd30ec9abe2c9387c7a72a51e53d8b4989c01
+  tag: v1.0.1
+  specs:
+    omniauth-twitter (1.0.1)
+      multi_json (~> 1.3)
+      omniauth-oauth (~> 1.0)
+
+GIT
+  remote: https://github.com/intridea/omniauth-github.git
+  revision: 76531e42d61c1a93f54dd4ae965208413f3854ab
+  tag: v1.1.1
+  specs:
+    omniauth-github (1.1.1)
+      omniauth (~> 1.0)
+      omniauth-oauth2 (~> 1.1)
+
+GIT
+  remote: https://github.com/intridea/omniauth-oauth2.git
+  revision: 76f6a5eb495b5323b37524eb626b4b0274d4abd4
+  tag: v1.1.1
+  specs:
+    omniauth-oauth2 (1.1.1)
+      oauth2 (~> 0.8.0)
+      omniauth (~> 1.0)
+
+GIT
+  remote: https://github.com/intridea/omniauth.git
+  revision: 91ce897ecff0899f22d8f96dbf1b5c5510e3dd12
+  tag: v1.1.1
+  specs:
+    omniauth (1.1.1)
+      hashie (~> 1.2)
+      rack
+
+GIT
+  remote: https://github.com/mkdynamic/omniauth-facebook.git
+  revision: d2f099deab685207bd548533eba9a075a63af912
+  tag: v1.5.1
+  specs:
+    omniauth-facebook (1.5.1)
+      omniauth-oauth2 (~> 1.1.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (3.2.1)
-      i18n (~> 0.6)
-      multi_json (~> 1.0)
-    addressable (2.2.7)
-    daemons (1.1.8)
-    eventmachine (0.12.10)
-    faraday (0.7.6)
-      addressable (~> 2.2)
-      multipart-post (~> 1.1)
-      rack (~> 1.1)
+    activesupport (4.0.2)
+      i18n (~> 0.6, >= 0.6.4)
+      minitest (~> 4.2)
+      multi_json (~> 1.3)
+      thread_safe (~> 0.1)
+      tzinfo (~> 0.3.37)
+    atomic (1.1.14)
+    daemons (1.1.9)
+    eventmachine (1.0.3)
+    faraday (0.8.8)
+      multipart-post (~> 1.2.0)
     hashie (1.2.0)
-    i18n (0.6.0)
-    json (1.6.5)
-    mime-types (1.17.2)
-    multi_json (1.1.0)
-    multipart-post (1.1.5)
-    newrelic_rpm (3.3.2)
-    oauth (0.4.5)
-    oauth2 (0.5.2)
-      faraday (~> 0.7)
+    httpauth (0.2.0)
+    i18n (0.6.9)
+    json (1.8.1)
+    jwt (0.1.8)
+      multi_json (>= 1.5)
+    mime-types (2.0)
+    minitest (4.7.5)
+    multi_json (1.8.2)
+    multipart-post (1.2.0)
+    newrelic_rpm (3.7.0.177)
+    oauth (0.4.7)
+    oauth2 (0.8.1)
+      faraday (~> 0.8)
+      httpauth (~> 0.1)
+      jwt (~> 0.1.4)
       multi_json (~> 1.0)
-    omniauth (1.0.2)
-      hashie (~> 1.2)
-      rack
-    omniauth-facebook (1.2.0)
-      omniauth-oauth2 (~> 1.0.0)
-    omniauth-github (1.0.1)
-      omniauth (~> 1.0)
-      omniauth-oauth2 (~> 1.0)
-    omniauth-oauth (1.0.0)
+      rack (~> 1.2)
+    omniauth-oauth (1.0.1)
       oauth
       omniauth (~> 1.0)
-    omniauth-oauth2 (1.0.0)
-      oauth2 (~> 0.5.0)
-      omniauth (~> 1.0)
-    omniauth-twitter (0.0.8)
-      omniauth-oauth (~> 1.0)
     rack (1.3.6)
-    rack-protection (1.2.0)
-      rack
     rest-client (1.6.7)
       mime-types (>= 1.16)
     shotgun (0.9)
       rack (>= 1.0)
-    sinatra (1.3.2)
-      rack (~> 1.3, >= 1.3.6)
-      rack-protection (~> 1.2)
-      tilt (~> 1.3, >= 1.3.3)
-    thin (1.3.1)
+    sinatra (1.0)
+      rack (>= 1.0)
+    thin (1.6.1)
       daemons (>= 1.0.9)
-      eventmachine (>= 0.12.6)
+      eventmachine (>= 1.0.0)
       rack (>= 1.0.0)
-    tilt (1.3.3)
+    thread_safe (0.1.3)
+      atomic
+    tilt (2.0.0)
+    tzinfo (0.3.38)
 
 PLATFORMS
   ruby
@@ -63,11 +101,11 @@ DEPENDENCIES
   i18n
   json
   newrelic_rpm
-  omniauth
-  omniauth-facebook
-  omniauth-github
-  omniauth-oauth2
-  omniauth-twitter
+  omniauth!
+  omniauth-facebook!
+  omniauth-github!
+  omniauth-oauth2!
+  omniauth-twitter!
   rack (= 1.3.6)
   rest-client
   shotgun
