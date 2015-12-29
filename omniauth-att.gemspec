@@ -31,6 +31,8 @@ Gem::Specification.new do |s|
   %w(shotgun heroku  omniauth-github omniauth-facebook omniauth-twitter).each do |gem|
     s.add_development_dependency gem
   end
+  s.add_runtime_dependency 'omniauth', '>= 0', '~> 1.0'
+  s.add_runtime_dependency 'omniauth-oauth2', '>= 0', '~> 1.0'
   # s.add_development_dependency "rspec"
   # s.add_runtime_dependency "rest-client"
 end
